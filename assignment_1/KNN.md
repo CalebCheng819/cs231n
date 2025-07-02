@@ -2,7 +2,7 @@
 
 ## 基础知识
 
-###### 数据格式
+###### oad_CIFAR_batch
 
 ```python
         X = datadict["data"]
@@ -10,8 +10,6 @@
         X = X.reshape(10000, 3, 32, 32).transpose(0, 2, 3, 1).astype("float")
         Y = np.array(Y)
 ```
-
-load_CIFAR_batch函数
 
 X = X.reshape(10000, 3, 32, 32).transpose(0, 2, 3, 1).astype("float")
 
@@ -154,3 +152,93 @@ def time_function(f, *args):
     return toc - tic
 ```
 
+###### cross validation
+
+```python
+num_folds = 5
+k_choices = [1, 3, 5, 8, 10, 12, 15, 20, 50, 100]
+
+X_train_folds = []
+y_train_folds = []
+################################################################################
+# TODO:                                                                        #
+# Split up the training data into folds. After splitting, X_train_folds and    #
+# y_train_folds should each be lists of length num_folds, where                #
+# y_train_folds[i] is the label vector for the points in X_train_folds[i].     #
+# Hint: Look up the numpy array_split function.                                #
+################################################################################
+X_train_folds=np.array_split(X_train,num_folds)
+y_train_folds=np.array_split(y_train,num_folds)
+
+
+# A dictionary holding the accuracies for different values of k that we find
+# when running cross-validation. After running cross-validation,
+# k_to_accuracies[k] should be a list of length num_folds giving the different
+# accuracy values that we found when using that value of k.
+k_to_accuracies = {}
+
+
+
+################################################################################
+# TODO:                                                                        #
+# Perform k-fold cross validation to find the best value of k. For each        #
+# possible value of k, run the k-nearest-neighbor algorithm num_folds times,   #
+# where in each case you use all but one of the folds as training data and the #
+# last fold as a validation set. Store the accuracies for all fold and all     #
+# values of k in the k_to_accuracies dictionary.                               #
+################################################################################
+for k in k_choices:
+  k_to_accuracies[k]=[]#为每组k创建好列表
+  #from collections import defaultdict
+  #k_to_accuracies = defaultdict(list)避免显示判断key存在以及显示创建
+  for i in range(num_folds):
+    X_val=X_train_folds[i]#注意需要划分验证集
+
+    y_val=y_train_folds[i]
+    X_train_fold=np.vstack(X_train_folds[:i]+X_train_folds[i+1:])#上下堆叠
+    y_train_fold=np.hstack(y_train_folds[:i]+y_train_folds[i+1:])#横向拼接
+  
+    classifier=KNearestNeighbor()
+    classifier.train(X_train_fold,y_train_fold)
+    dists=classifier.compute_distances_no_loops(X_val)
+    y_pred=classifier.predict_labels(dists,k=k)#是利用dists矩阵预测标签
+    accuracy=np.mean(y_pred==y_val)
+    k_to_accuracies[k].append(accuracy)
+
+# Print out the computed accuracies
+for k in sorted(k_to_accuracies):
+    for accuracy in k_to_accuracies[k]:
+        print('k = %d, accuracy = %f' % (k, accuracy))
+```
+
+[numpy.array_split — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/generated/numpy.array_split.html)：划分数据集
+
+*defaultdict避免显示创建key*
+
+[numpy.vstack — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/generated/numpy.vstack.html)	[numpy.hstack — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/generated/numpy.hstack.html)：hs横向堆叠，vs上下叠加
+
+sorted确保输出的**有序**
+
+散点误差图
+
+```python
+# plot the raw observations
+for k in k_choices:
+    accuracies = k_to_accuracies[k]
+    plt.scatter([k] * len(accuracies), accuracies)
+
+# plot the trend line with error bars that correspond to standard deviation
+accuracies_mean = np.array([np.mean(v) for k,v in sorted(k_to_accuracies.items())])
+accuracies_std = np.array([np.std(v) for k,v in sorted(k_to_accuracies.items())])
+plt.errorbar(k_choices, accuracies_mean, yerr=accuracies_std)
+plt.title('Cross-validation on k')
+plt.xlabel('k')
+plt.ylabel('Cross-validation accuracy')
+plt.show()
+```
+
+[matplotlib.pyplot.scatter — Matplotlib 3.10.3 documentation](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html)：散点图绘制，其中[k] * len(accuracies)创建一个[k,……]列表与之对应
+
+.item()返回一个（k，v）的迭代器，k为key，v为列表
+
+[matplotlib.pyplot.errorbar — Matplotlib 3.10.3 documentation](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.errorbar.html)：xerr，yerr分别是x，y对应的标准差
