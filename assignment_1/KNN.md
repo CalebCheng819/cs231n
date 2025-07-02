@@ -75,6 +75,8 @@ def compute_distances_one_loop(self, X):
 axis=1**横向相加**，对列元素进行操作；axis=0**纵向相加**，对行元素进行操作
 
 no loop
+
+
 $$
 \|x-y\|^2=\|x\|^2+\|y\|^2-2x\cdot y
 $$
@@ -134,6 +136,8 @@ difference = np.linalg.norm(dists - dists_one, ord='fro')
 [numpy.linalg.norm — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html)
 
 Frobenius 范数：
+
+
 $$
 \|A\|_F=\sqrt{\sum_{i,j}|A_{i,j}|^2}
 $$
