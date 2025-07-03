@@ -23,13 +23,9 @@ $$
 
 ###### regularization正则化
 
-
-
 $$
 L=\underbrace{\frac{1}{N}\sum_iL_i}_{\mathrm{data~loss}}+\underbrace{\lambda R(W)}_{\textit{regularization loss}}=\frac{1}{N}\sum_i\sum_{j\neq y_i}[max(0,f(x_i;W)_j-f(x_i;W)_{y_i}+\Delta)]+\lambda\sum_k\sum_lW_{k,l}^2
 $$
-
-
 
 regularization penalty：为权重（非唯一）添加一些偏好，偏向于更小更分散的向量
 
