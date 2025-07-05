@@ -124,7 +124,7 @@ def predict_labels(self, dists, k=1):
 
 [numpy.argsort — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/generated/numpy.argsort.html)：**返回排序后的唯一值**，return_counts=True返回唯一值出现的次数
 
-[numpy.argmax — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/generated/numpy.argmax.html)：返回最大值的**索引**
+[numpy.argmax — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/generated/numpy.argmax.html)：返回最大值的**索引**，axis=0列方向最大，axis=1行方向最大
 
 ###### 比较矩阵
 
