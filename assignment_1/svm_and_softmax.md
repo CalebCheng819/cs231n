@@ -447,7 +447,7 @@ def softmax_loss_vectorized(W, X, y, reg):
 
 [numpy.max — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/generated/numpy.max.html)：返回一条轴上的最大值，可以控制维度不变
 
-[numpy.arange — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/generated/numpy.arange.html)：与range类似，可以搭配使用高级索引和操作
+[numpy.arange — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/generated/numpy.arange.html)：与range类似，可以搭配使用高级索引和操作（**不要写错成arrange**）
 
 ###### 梯度检查（gradient check）
 
@@ -494,3 +494,23 @@ def grad_check_sparse(f, x, analytic_grad, num_checks=10, h=1e-5):
 ```
 
 **tuple**：将每个维度的随机值转换成位置索引
+
+###### save model
+
+```python
+def save(self, fname):
+      """Save model parameters."""
+      fpath = os.path.join(os.path.dirname(__file__), "../saved/", fname)
+      params = {"W": self.W}
+      np.save(fpath, params)
+      print(fname, "saved.")
+```
+
+__file_ _是python内置变量，表示当前脚本的位置
+
+**os.path.dirname**:获取当前文件的目录名
+
+../saved/进入上一级目录，并进入saved/
+
+[numpy.random.choice — NumPy v2.3 Manual](https://numpy.org/doc/stable/reference/random/generated/numpy.random.choice.html)：路径+文件，保存为npz格式
+
