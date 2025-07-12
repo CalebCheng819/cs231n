@@ -11,7 +11,7 @@
         Y = np.array(Y)
 ```
 
-X = X.reshape(10000, 3, 32, 32).transpose(0, 2, 3, 1).astype("float")
+X = X.reshape(10000, 3, 32, 32).transpose(0, 2, 3, 1).astype("floa
 
 此句分为三步，第一步将3072一维展为（3，32，32），后交换维度顺序，改为常见的HWC格式，最后将原来的uint8转换为float
 
